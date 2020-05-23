@@ -3,16 +3,15 @@ import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 
 plugins {
     id 'base'
-   id 'com.palantir.docker' version '0.25.0'
+    id 'com.palantir.docker' version '0.25.0'
     id 'com.palantir.docker-run' version '0.25.0'
-    id 'pl.allegro.tech.build.axion-release' version '1.10.1'
+    id 'pl.allegro.tech.build.axion-release' version '1.10.3'
 }
 
-//project.version = scmVersion.version
 project.version = scmVersion.version
 docker {
     name "${project.name}:${project.version}"
-    files "plugins.txt", "seedJob.xml"
+    files "plugins.txt", "Pipeline.xml","MultiBranchPipeline.xml"
 }
 
 
@@ -20,7 +19,8 @@ dockerRun {
     name "${project.name}"
     image "${project.name}:${project.version}"
     ports '8080:8080'
+    volumes '/Users/black/Documents/Projects/MyLocalProject/Jenkin/jenkins-demo/jenkins_local_home': '/var/jenkins_home'
     clean true
     daemonize false
-    arguments '-v', '//var/run/docker.sock:/var/run/docker.sock', '--group-add', "root"
+    arguments '-v', '//var/run/docker.sock:/var/run/docker.sock', '-v', '/Users/black/Documents/Projects/MyLocalProject/Jenkin/spring-boot-api-example:/var/project/spring-boot-api-example','-v' ,'/Users/black/Documents/Projects/MyLocalProject/Jenkin/gb-jenkins:/var/project/gb-jenkins','--group-add', "root"
 }
